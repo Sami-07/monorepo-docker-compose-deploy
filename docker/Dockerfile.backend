@@ -2,17 +2,68 @@ FROM oven/bun:1
 
 WORKDIR /app 
 
-COPY ./packages ./packages
-COPY ./bun.lock ./bun.lock
-
-COPY ./package.json ./package.json
-COPY ./turbo.json ./turbo.json
-
-COPY ./apps/backend ./apps/backend
+COPY package.json turbo.json bun.lock ./
+COPY packages/db/package.json ./packages/db/
+COPY apps/backend/package.json ./apps/backend/
 
 RUN bun install
+
+COPY ./packages/db ./packages/db
+COPY ./apps/backend ./apps/backend
+
 RUN bun run db:generate
 
 EXPOSE 8080
 
 CMD ["bun", "run" , "start:backend"]
+
+
+#! Layer-optimized Dockerfile for backend if we had used npm. 
+# We don't need to build the typescript code when using bun because bun will do that for us.
+# Bun can run TypeScript directly without a compilation step
+# Bun's TypeScript runtime is very fast (nearly as fast as compiled JavaScript)
+# The setup is simpler and more straightforward
+# You don't need the complexity of multi-stage builds
+
+
+# # Build stage
+# FROM node:20-slim AS builder
+
+# WORKDIR /app 
+
+# # Copy all package files first
+# COPY package.json package-lock.json turbo.json ./
+# COPY packages/*/package.json ./packages/
+# COPY apps/backend/package.json ./apps/backend/
+
+# # Install all dependencies (including devDependencies)
+# RUN npm ci
+
+# # Copy source code
+# COPY ./packages ./packages
+# COPY ./apps/backend ./apps/backend
+
+# # Generate Prisma client and build
+# RUN npm run db:generate
+# RUN npm run build:backend
+
+# # Production stage
+# FROM node:20-slim
+
+# WORKDIR /app
+
+# # Copy package files for production
+# COPY package.json package-lock.json turbo.json ./
+# COPY packages/*/package.json ./packages/
+# COPY apps/backend/package.json ./apps/backend/
+
+# # Install only production dependencies
+# RUN npm ci --only=production
+
+# # Copy built files and necessary artifacts
+# COPY --from=builder /app/apps/backend/dist ./apps/backend/dist
+# COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+
+# EXPOSE 8080
+
+# CMD ["npm", "run", "start:backend"]

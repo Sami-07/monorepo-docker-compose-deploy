@@ -8,7 +8,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "start:backend": "cd apps/backend && bun run dev",
-    "start:frontend": "cd apps/web && bun run dev",
+    "start:web": "cd apps/web && bun run dev",
     "start:websocket": "cd apps/websocket && bun run dev",
     "db:generate": "cd packages/db && bun run db:generate",
     "db:migrate": "cd packages/db && bun run db:migrate",

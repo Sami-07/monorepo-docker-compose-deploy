@@ -13,6 +13,7 @@ app.get("/user", (req, res) => {
         .catch(err => {
             res.status(500).json({ error: err.message });
         });
+        
 })
 
 app.post("/user", (req, res) => {
