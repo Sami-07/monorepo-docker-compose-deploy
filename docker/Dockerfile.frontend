@@ -19,11 +19,9 @@ COPY apps/web ./apps/web
 
 RUN bun run db:generate
 
-# Set the environment variable for the container
+
 ENV DATABASE_URL="${DATABASE_URL}"
 
-# Create a .env file for Next.js and Prisma to use during build
-RUN echo "DATABASE_URL=${DATABASE_URL}" > /app/apps/web/.env && cat /app/apps/web/.env
 
 RUN bun run build
 
