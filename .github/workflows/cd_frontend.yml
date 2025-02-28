@@ -1,0 +1,26 @@
+name: CI/CD for frontend
+on:
+  push:
+    branches: [ main ] 
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout/transfer the code
+          uses: actions/checkout@v2
+          
+        - name: Docker login
+          uses: docker/login-action@v2
+          with:
+            username: ${{secrets.DOCKERHUB_USERNAME}}
+            password: ${{ secrets.DOCKERHUB_PASSWORD}}
+
+        - name: Build and push
+          uses: docker/build-push-action@v4
+          with: 
+            context: .
+            file: ./docker/Dockerfile.frontend
+            push: true
+            tags: abdulsami7/monorepo-fe:${{ github.sha }}
+            build-args: |
+              DATABASE_URL=${{ secrets.DATABASE_URL }}
