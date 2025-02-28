@@ -2,6 +2,7 @@ FROM oven/bun:1
 
 ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL}
+
 WORKDIR /app
 
 COPY package.json bun.lock turbo.json ./
@@ -17,7 +18,16 @@ RUN bun install
 COPY packages ./packages
 COPY apps/web ./apps/web
 
+
+RUN cd packages/db && \
+    bunx prisma generate && \
+    cd ../..
+
+
 RUN bun run db:generate
+
+ENV PRISMA_QUERY_ENGINE_LIBRARY=/app/packages/db/node_modules/@prisma/client/libquery_engine-debian-openssl-3.0.x.so.node
+ENV PRISMA_SCHEMA_ENGINE_LIBRARY=/app/packages/db/node_modules/@prisma/client/libschema_engine-debian-openssl-3.0.x.so.node
 
 RUN bun run build
 
