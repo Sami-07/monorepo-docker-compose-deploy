@@ -1,21 +1,11 @@
 name: CI/CD for frontend
 on:
   push:
-    branches:
-      - main
-    paths-ignore:
-      - '.github/workflows/**'
-
+    branches: [ main ] 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Debug Information
-        run: |
-          echo "Event name: ${{ github.event_name }}"
-          echo "Branch name: ${{ github.ref }}"
-          echo "Commit SHA: ${{ github.sha }}"
-          
       - name: Checkout/transfer the code
         uses: actions/checkout@v2
           
@@ -32,5 +22,5 @@ jobs:
           file: ./docker/Dockerfile.frontend
           push: true
           tags: abdulsami7/monorepo-fe:${{ github.sha }}
-          build-args: |
+          build-args: | 
             DATABASE_URL=${{ secrets.DATABASE_URL }}
