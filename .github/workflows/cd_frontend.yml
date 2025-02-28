@@ -1,11 +1,21 @@
 name: CI/CD for frontend
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+    paths-ignore:
+      - '.github/workflows/**'
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Debug Information
+        run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "Branch name: ${{ github.ref }}"
+          echo "Commit SHA: ${{ github.sha }}"
+          
       - name: Checkout/transfer the code
         uses: actions/checkout@v2
           
