@@ -23,6 +23,8 @@ RUN echo DATABASE_URL=${DATABASE_URL} >> apps/web/.env
 
 RUN DATABASE_URL=${DATABASE_URL} bun run build
 
+RUN rm apps/web/.env
+
 EXPOSE 3000
 
 CMD ["bun", "run", "start:web"]
