@@ -7,9 +7,9 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "start:backend": "cd apps/backend && bun run dev",
-    "start:web": "cd apps/web && bun run dev",
-    "start:websocket": "cd apps/websocket && bun run dev",
+    "start:backend": "cd apps/backend && bun run index.ts",
+    "start:web": "cd apps/web && bun run start",
+    "start:websocket": "cd apps/websocket && bun run index.ts",
     "db:generate": "cd packages/db && bun run db:generate",
     "db:migrate": "cd packages/db && bun run db:migrate",
     "db:studio" : "cd packages/db && bunx prisma studio"

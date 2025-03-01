@@ -1,14 +1,14 @@
 name: CI/CD for backend
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout/transfer the code
         uses: actions/checkout@v2
-        
+
       - name: Docker login
         uses: docker/login-action@v2
         with:
@@ -17,9 +17,14 @@ jobs:
 
       - name: Build and push
         uses: docker/build-push-action@v4
-        with: 
+        with:
           context: .
           file: ./docker/Dockerfile.backend
           push: true
           tags: abdulsami7/monorepo-be:${{ github.sha }}
-          
+
+      - name: Deploy to VM
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" &> ~/ssh_key
+          chmod 700 /home/runner/ssh_key
+          ssh -o StrictHostKeyChecking=no root@13.233.204.37 -t  "docker stop monorepo-be && docker run  docker run -d --name monorepo-be -p 8080:8080 abdulsami7/monorepo-be:${{ github.sha }}"
